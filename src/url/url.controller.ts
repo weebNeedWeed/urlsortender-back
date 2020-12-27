@@ -11,8 +11,7 @@ import {
 } from "@nestjs/common";
 import { SlugValidator } from "./slug-validator.pipe";
 
-// Xóa "url"
-@Controller()
+@Controller("url")
 export class UrlController {
   constructor(private urlService: UrlService) {}
 
@@ -21,7 +20,7 @@ export class UrlController {
     return this.urlService.createSortUrl(sortUrlDto);
   }
 
-  @Get("/r/:slug")
+  @Get("/:slug")
   async redirect(
     @Param("slug", SlugValidator) slug: string,
     @Res() res,

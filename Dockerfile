@@ -6,4 +6,6 @@ COPY . .
 
 RUN npm install
 
-CMD npm run build && node /app/dist/main.js
+RUN npm run build
+
+CMD echo $PORT && node /app/dist/main.js

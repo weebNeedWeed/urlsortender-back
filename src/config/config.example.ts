@@ -6,3 +6,4 @@ export const DbConfig = {
     useUnifiedTopology: true,
   },
 };
+export const PORT = process.env.PORT;
