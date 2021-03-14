@@ -1,6 +1,10 @@
 import { SortUrlDto } from "./sort-url.dto";
 import { Url, UrlDocument } from "./url.schema";
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
@@ -40,6 +44,28 @@ export class UrlService {
 
     if (!url) {
       throw new BadRequestException("Url not found");
+    }
+
+    const lastAccess: number = url.lastAccess;
+    const remainTime: number = Date.now() - lastAccess;
+
+    if (url.accessCount === 10) {
+      if (remainTime < 86400000) {
+        throw new ForbiddenException(
+          `Can not be used in the next ${
+            24 - Math.floor(remainTime * 2.77777778 * Math.pow(10, -7))
+          } hours`,
+        );
+      }
+
+      url.accessCount = 0;
+      url.lastAccess = Date.now();
+    }
+
+    if (url.accessCount < 10) {
+      url.accessCount = 1 + url.accessCount;
+
+      await url.save();
     }
 
     return url.raw_url;

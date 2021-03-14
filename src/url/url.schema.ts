@@ -8,8 +8,14 @@ export class Url {
   @Prop({ unique: true })
   name: string;
 
-  @Prop()
+  @Prop({ required: true })
   raw_url: string;
+
+  @Prop({ type: Number, required: true, default: Date.now() })
+  lastAccess: number;
+
+  @Prop({ required: true, default: 0 })
+  accessCount: number;
 }
 
 export const UrlSchema = SchemaFactory.createForClass(Url);
