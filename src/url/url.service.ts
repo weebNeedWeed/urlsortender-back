@@ -43,7 +43,7 @@ export class UrlService {
       .exec();
 
     if (!url) {
-      throw new BadRequestException("Url not found");
+      throw new BadRequestException("Not found");
     }
 
     const lastAccess: number = url.lastAccess;
@@ -69,5 +69,23 @@ export class UrlService {
     }
 
     return url.raw_url;
+  }
+
+  async updateUrl(sortUrlDto: SortUrlDto): Promise<string> {
+    const url = await this.urlModel
+      .findOne({
+        name: sortUrlDto.name,
+      })
+      .exec();
+
+    if (!url) {
+      throw new BadRequestException("Not found");
+    }
+
+    url.raw_url = sortUrlDto.rawUrl;
+
+    await url.save();
+
+    return sortUrlDto.name;
   }
 }

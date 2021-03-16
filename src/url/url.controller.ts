@@ -5,6 +5,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Res,
   ValidationPipe,
@@ -28,5 +29,12 @@ export class UrlController {
     const url = await this.urlService.getUrl(slug);
 
     return res.redirect(url);
+  }
+
+  @Patch()
+  async updateUrl(
+    @Body(ValidationPipe) sortUrlDto: SortUrlDto,
+  ): Promise<string> {
+    return await this.urlService.updateUrl(sortUrlDto);
   }
 }
